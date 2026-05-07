@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import { SubtitleItem, GeminiKeyRecord } from "../types";
 import { getTranscriptionRules, buildRulesText } from "./transcriptionRulesService";
 
@@ -339,31 +339,34 @@ export async function translateSubtitles(
           parts: [{ text: prompt }],
         },
       ],
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.ARRAY,
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              id:        { type: Type.STRING },
-              startTime: { type: Type.NUMBER },
-              endTime:   { type: Type.NUMBER },
-              text:      { type: Type.STRING },
-            },
-            required: ['id', 'text'],
-          },
-        },
-      },
     });
 
-    const translationsJson = JSON.parse(response.text || '[]');
+    const rawText = response.text || '';
+    console.log('[Translate] Raw response length:', rawText.length);
+    console.log('[Translate] Raw response preview:', rawText.slice(0, 200));
+
+    // Strip markdown code fences nếu có
+    const stripped = rawText.trim()
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/, '')
+      .trim();
+
+    let translationsJson: any[] = [];
+    try {
+      translationsJson = JSON.parse(stripped);
+      if (!Array.isArray(translationsJson)) translationsJson = [];
+    } catch (e) {
+      console.warn('[Translate] Failed to parse JSON response:', e);
+    }
+
     const translationMap = new Map<string, string>();
     translationsJson.forEach((item: any) => {
       if (item.id && item.text) {
         translationMap.set(item.id, item.text);
       }
     });
+
+    console.log('[Translate] Translated items:', translationMap.size);
 
     return subtitles.map(s => ({
       ...s,
