@@ -954,7 +954,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ isOpen,
 
             {activeTab === 'about' && (
               <div className="space-y-6 max-w-3xl mx-auto py-4">
-                <div className="text-center">
+                <div className="flex items-center justify-center gap-3">
+                  <img
+                    src="/Logo.png"
+                    alt="Nyra Translate Logo"
+                    className="w-10 h-10 rounded-2xl object-cover shadow-lg shadow-blue-900/30"
+                  />
                   <motion.h3 
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -975,18 +980,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ isOpen,
                       <div className="flex items-center gap-2 text-purple-400">
                         <User className="w-4 h-4" />
                         <h4 className="text-sm font-bold text-zinc-300">{t.authorInfo}</h4>
-                      </div>
-
-                      <div className="flex items-center gap-3 pb-3 border-b border-zinc-800/60">
-                        <img
-                          src="/Logo.png"
-                          alt="Nyra Translate Logo"
-                          className="w-12 h-12 rounded-2xl object-cover shadow-lg shadow-blue-900/30 ring-2 ring-blue-500/20"
-                        />
-                        <div>
-                          <p className="font-black text-sm text-white leading-tight">Nyra Translate</p>
-                          <p className="text-[10px] text-zinc-500 uppercase tracking-widest">AI Language Tool</p>
-                        </div>
                       </div>
                       
                       <div className="w-full space-y-2">

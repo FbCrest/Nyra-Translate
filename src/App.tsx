@@ -910,12 +910,12 @@ export default function App() {
               whileHover={{ scale: 1.05, rotate: 8 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30 cursor-pointer relative overflow-hidden z-10"
+              className="w-11 h-11 rounded-2xl flex items-center justify-center cursor-pointer relative z-10"
             >
               <img
                 src="/Logo.png"
                 alt="Logo"
-                className="w-full h-full object-cover rounded-2xl"
+                className="w-full h-full object-contain rounded-2xl"
               />
             </motion.div>
           </div>
