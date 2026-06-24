@@ -958,7 +958,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ isOpen,
                   <img
                     src="/Logo.png"
                     alt="Nyra Translate Logo"
-                    className="w-10 h-10 rounded-2xl object-cover shadow-lg shadow-blue-900/30"
+                    className="w-12 h-12 object-contain"
                   />
                   <motion.h3 
                     initial={{ scale: 0.9, opacity: 0 }}
