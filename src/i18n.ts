@@ -5,7 +5,7 @@
 
 export const translations = {
   en: {
-    title: 'ZhiYu Subtitle',
+    title: 'Nyra Translate',
     subtitle: 'AI Language Engine',
     upload: 'Upload Video / Audio',
     uploadDesc: 'Drag and drop or click to browse. Supports high quality files.',
@@ -143,7 +143,7 @@ export const translations = {
     deleteSubtitle: 'Delete Subtitle'
   },
   vi: {
-    title: 'ZhiYu Subtitle',
+    title: 'Nyra Translate',
     subtitle: 'Công cụ Ngôn ngữ AI',
     upload: 'Tải lên Video / Âm thanh',
     uploadDesc: 'Kéo thả hoặc nhấp để chọn bất kỳ ngôn ngữ nào. Hỗ trợ tệp tin chất lượng cao.',

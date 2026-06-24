@@ -367,44 +367,21 @@ export default function App() {
     document.documentElement.classList.add("dark");
   }, [state.settings]);
 
-  // Static favicon — chữ Z gradient xanh tím
+  // Favicon from Logo.png
   useEffect(() => {
-    const SIZE = 32;
-    const canvas = document.createElement("canvas");
-    canvas.width = SIZE;
-    canvas.height = SIZE;
-    const ctx = canvas.getContext("2d")!;
-    const cx = SIZE / 2;
-    const cy = SIZE / 2;
-    const r = SIZE / 2 - 1;
-
-    const grad = ctx.createLinearGradient(0, 0, SIZE, SIZE);
-    grad.addColorStop(0, "#2563eb");
-    grad.addColorStop(0.5, "#6366f1");
-    grad.addColorStop(1, "#7c3aed");
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 18px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("Z", cx, cy + 1);
-
     let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
     if (!link) {
       link = document.createElement("link");
       link.rel = "icon";
       document.head.appendChild(link);
     }
-    link.href = canvas.toDataURL("image/png");
+    link.type = "image/png";
+    link.href = "/Logo.png";
   }, []);
 
   // Braille spinner trong tab title — 10fps khi đang xử lý
   useEffect(() => {
-    const APP_NAME = "ZhiYu Subtitle";
+    const APP_NAME = "Nyra Translate";
     const FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
     const isAnimated = ["processing", "transcribing", "translating"].includes(state.status);
 
@@ -682,8 +659,8 @@ export default function App() {
       setState((prev) => ({ ...prev, status: "translating" }));
       setProgress(0);
       
-      // Batch translation — 50 items/batch để giữ context tốt hơn và giảm số request
-      const batchSize = 50;
+      // Batch translation — 30 items/batch, retry nếu AI bỏ sót câu
+      const batchSize = 30;
       const totalBatches = Math.ceil(state.subtitles.length / batchSize);
       let currentSubtitles = [...state.subtitles];
       
@@ -692,14 +669,30 @@ export default function App() {
         const end = Math.min(start + batchSize, currentSubtitles.length);
         const batch = currentSubtitles.slice(start, end);
         
-        const translatedBatch = await translateSubtitles(
-          batch,
-          state.settings.apiKeys,
-          state.settings.activeKeyId,
-          state.settings.translationModel,
-          handleKeyError,
-          handleKeySuccess,
-        );
+        let translatedBatch = batch;
+        const MAX_RETRIES = 2;
+
+        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+          const result = await translateSubtitles(
+            batch,
+            state.settings.apiKeys,
+            state.settings.activeKeyId,
+            state.settings.translationModel,
+            handleKeyError,
+            handleKeySuccess,
+          );
+
+          // Kiểm tra có bị mất câu không (câu nào chưa có bản dịch)
+          const missingCount = result.filter(s => !s.vietnamese).length;
+          if (missingCount === 0 || attempt === MAX_RETRIES) {
+            translatedBatch = result;
+            if (missingCount > 0) {
+              console.warn(`[Translate] Batch ${i + 1}: still missing ${missingCount} items after ${MAX_RETRIES} retries`);
+            }
+            break;
+          }
+          console.warn(`[Translate] Batch ${i + 1}: missing ${missingCount} items, retrying (attempt ${attempt + 1})...`);
+        }
         
         // Update current version
         currentSubtitles = [
@@ -917,17 +910,13 @@ export default function App() {
               whileHover={{ scale: 1.05, rotate: 8 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="w-10 h-10 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30 cursor-pointer relative overflow-hidden z-10"
+              className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30 cursor-pointer relative overflow-hidden z-10"
             >
-              <motion.div 
-                animate={{ 
-                  opacity: [0, 1, 0],
-                  scale: [0.8, 1.2, 0.8]
-                }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent pointer-events-none"
+              <img
+                src="/Logo.png"
+                alt="Logo"
+                className="w-full h-full object-cover rounded-2xl"
               />
-              <Sparkles className="w-5 h-5 text-white z-10" />
             </motion.div>
           </div>
 

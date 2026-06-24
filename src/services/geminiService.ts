@@ -413,24 +413,53 @@ export async function translateSubtitles(
           parts: [{ text: prompt }],
         },
       ],
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id:        { type: 'string' },
+              startTime: { type: 'number' },
+              endTime:   { type: 'number' },
+              text:      { type: 'string' },
+            },
+            required: ['id', 'text'],
+          },
+        },
+      },
     });
 
     const rawText = response.text || '';
     console.log('[Translate] Raw response length:', rawText.length);
 
     const arr = safeParseJsonArray(rawText);
-    console.log('[Translate] Parsed items:', arr.length);
+    console.log('[Translate] Parsed items:', arr.length, '/ expected:', subtitles.length);
 
+    // Primary map: by id
     const translationMap = new Map<string, string>();
-    arr.forEach((item: any) => {
-      if (item.id && item.text) {
-        translationMap.set(item.id, item.text);
+    arr.forEach((item: any, idx: number) => {
+      const text = (item.text ?? item.vietnamese ?? '').trim();
+      if (text) {
+        // Map by id if present
+        if (item.id) translationMap.set(item.id, text);
+        // Also map by index as fallback key
+        translationMap.set(`__idx__${idx}`, text);
       }
     });
 
-    return subtitles.map(s => ({
-      ...s,
-      vietnamese: translationMap.get(s.id) || s.vietnamese,
-    }));
+    return subtitles.map((s, idx) => {
+      // 1) Try map by id
+      const byId = translationMap.get(s.id);
+      if (byId) return { ...s, vietnamese: byId };
+
+      // 2) Try map by position index (AI returned items in same order but wrong/missing id)
+      const byIdx = translationMap.get(`__idx__${idx}`);
+      if (byIdx) return { ...s, vietnamese: byIdx };
+
+      // 3) Keep existing vietnamese (not lost, just untranslated this round)
+      return s;
+    });
   });
 }
