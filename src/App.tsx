@@ -899,13 +899,6 @@ export default function App() {
           <div className="absolute -inset-4 bg-blue-500/10 blur-2xl rounded-full opacity-50" />
           
           <div className="relative group">
-            {/* Rotating border decoration */}
-            <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              className="absolute -inset-1 border border-dashed border-blue-400/30 rounded-2xl"
-            />
-            
             <motion.div 
               whileHover={{ scale: 1.05, rotate: 8 }}
               whileTap={{ scale: 0.95 }}
@@ -926,7 +919,7 @@ export default function App() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ opacity: { duration: 0.5 }, x: { duration: 0.5 } }}
-                className="title-rainbow font-black text-xl leading-tight tracking-tighter"
+                className="title-rainbow font-black text-2xl leading-tight tracking-tighter"
               >
                 {t.title}
               </motion.h1>
@@ -954,7 +947,7 @@ export default function App() {
                 x: { duration: 0.5 },
                 backgroundPosition: { duration: 12, repeat: Infinity, ease: "linear" }
               }}
-              className="text-[9px] uppercase font-black tracking-[0.4em] bg-gradient-to-r from-zinc-500 via-zinc-400 to-zinc-600 bg-[size:200%_auto] bg-clip-text text-transparent"
+              className="text-[10px] uppercase font-black tracking-[0.4em] bg-gradient-to-r from-zinc-500 via-zinc-400 to-zinc-600 bg-[size:200%_auto] bg-clip-text text-transparent"
             >
               {t.subtitle}
             </motion.p>
