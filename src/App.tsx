@@ -883,7 +883,7 @@ export default function App() {
     >
       {/* Header */}
       <header
-        className="header-border-flow h-16 border-b flex items-center justify-between px-6 md:px-10 shrink-0 z-50 backdrop-blur-xl transition-all duration-300 bg-zinc-950/80 border-zinc-800 shadow-xl shadow-black/20 relative"
+        className="header-border-flow h-20 border-b flex items-center justify-between px-6 md:px-10 shrink-0 z-50 backdrop-blur-xl transition-all duration-300 bg-zinc-950/80 border-zinc-800 shadow-xl shadow-black/20 relative"
       >
         {/* Subtle glass shine animation */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -910,7 +910,7 @@ export default function App() {
               whileHover={{ scale: 1.05, rotate: 8 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="w-11 h-11 rounded-2xl flex items-center justify-center cursor-pointer relative z-10"
+              className="w-14 h-14 rounded-2xl flex items-center justify-center cursor-pointer relative z-10"
             >
               <img
                 src="/Logo.png"
