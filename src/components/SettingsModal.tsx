@@ -954,20 +954,27 @@ export const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ isOpen,
 
             {activeTab === 'about' && (
               <div className="space-y-6 max-w-3xl mx-auto py-4">
-                <div className="flex items-center justify-center gap-3">
-                  <img
-                    src="/Logo.png"
-                    alt="Nyra Translate Logo"
-                    className="w-12 h-12 object-contain"
-                  />
-                  <motion.h3 
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="title-rainbow text-2xl font-black tracking-tighter"
-                  >
-                    {t.title}
-                  </motion.h3>
-                </div>
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="flex flex-col items-center gap-3"
+                >
+                  <div className="flex items-center gap-4">
+                    <img
+                      src="/Logo.png"
+                      alt="Nyra Translate Logo"
+                      className="w-16 h-16 object-contain"
+                    />
+                    <div className="flex flex-col gap-1">
+                      <h3 className="title-rainbow text-3xl font-black tracking-tighter leading-none">
+                        {t.title}
+                      </h3>
+                      <p className="text-[11px] uppercase font-black tracking-[0.35em] bg-gradient-to-r from-zinc-500 via-zinc-400 to-zinc-600 bg-clip-text text-transparent">
+                        {t.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Author Card */}
